@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import  httpStatus  from 'http-status-codes';
 import AppError from "../../errorHandlers/AppError";
 import { User } from '../user/user.model';
