@@ -29,7 +29,7 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
     const verifiedToken = req.user
     const payload = req.body
 
-    const user = await UserServices.updateUser(userId, payload, verifiedToken)
+    const user = await UserServices.updateUser(userId, payload, verifiedToken as JwtPayload)
 
     sendResponse(res,{
         success: true,
@@ -41,7 +41,8 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 
 
 const getAllUsers = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    const result = await UserServices.getAllUsers()
+    const query = req.query
+    const result = await UserServices.getAllUsers(query as Record<string,string>)
     
     sendResponse(res,{
         success: true,
