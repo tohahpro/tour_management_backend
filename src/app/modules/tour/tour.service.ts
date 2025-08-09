@@ -23,6 +23,10 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
         throw new Error("Tour not found.");
     }
 
+    if(payload.images && payload.images.length > 0 && existingTour.images && existingTour.images.length > 0){
+        payload.images = [...payload.images, ...existingTour.images]
+    }
+
     const updatedTour = await Tour.findByIdAndUpdate(id, payload, { new: true });
 
     return updatedTour
