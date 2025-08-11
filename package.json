@@ -39,7 +39,7 @@
     "dotenv": "^17.1.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "express-session": "^1.18.1",
+    "express-session": "^1.18.2",
     "http": "^0.0.1-security",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
