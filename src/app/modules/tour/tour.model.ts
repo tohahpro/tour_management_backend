@@ -1,5 +1,6 @@
-import { model, Schema } from "mongoose";
-import { ITour, ITourType } from "./tour.interface";
+import { Schema } from "mongoose"
+import { ITour, ITourType } from "./tour.interface"
+import { model } from "mongoose"
 
 
 const tourTypeSchema = new Schema<ITourType>({
@@ -18,9 +19,9 @@ const tourSchema = new Schema<ITour>({
     location: { type: String },
     costFrom: { type: Number },
     startDate: { type: Date },
-    departureLocation:{type: String},
-    arrivalLocation:{type: String},
     endDate: { type: Date },
+    departureLocation: { type: String },
+    arrivalLocation: { type: String },
     included: { type: [String], default: [] },
     excluded: { type: [String], default: [] },
     amenities: { type: [String], default: [] },
@@ -77,6 +78,5 @@ tourSchema.pre("findOneAndUpdate", async function (next) {
 
     next()
 })
-
 
 export const Tour = model<ITour>("Tour", tourSchema)
