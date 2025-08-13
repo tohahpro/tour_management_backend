@@ -9,7 +9,7 @@ import { IsActive } from '../modules/user/user.interface';
 
 export const checkAuth = (...athRoles: string[])=>async(req: Request, res: Response, next: NextFunction)=>{
     try {
-        const accessToken = req.headers.authorization;
+        const accessToken = req.headers.authorization || req.cookies.accessToken;
 
         if(!accessToken){
             throw new AppError(403, "No Token Received")
@@ -27,6 +27,10 @@ export const checkAuth = (...athRoles: string[])=>async(req: Request, res: Respo
         }
         if(isUserExist.isDeleted){
             throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
+        }
+
+        if(!isUserExist.isVerified){
+            throw new AppError(httpStatus.BAD_REQUEST, "User is not verified")
         }
 
         if(!athRoles.includes(verifiedToken.role)){
