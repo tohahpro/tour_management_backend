@@ -8,8 +8,8 @@ import { sendResponse } from "../../utils/sendResponse";
 const createTour = catchAsync(async (req: Request, res: Response) => {
     const payload: ITour = {
         ...req.body,
-        // images: (req.files as Express.Multer.File[]).map(file => file.path)
-        images: Array.isArray(req.files) ? (req.files as Express.Multer.File[]).map(file => file.path) : []
+        images: (req.files as Express.Multer.File[]).map(file => file.path)
+        // images: Array.isArray(req.files) ? (req.files as Express.Multer.File[]).map(file => file.path) : []
     }
     const result = await TourService.createTour(payload);
     sendResponse(res, {
@@ -23,7 +23,7 @@ const createTour = catchAsync(async (req: Request, res: Response) => {
 const getAllTours = catchAsync(async (req: Request, res: Response) => {
 
     const query = req.query
-    const result = await TourService.getAllTours(query as Record<string, string>);
+    const result = await TourService.getAllTours(query as Record<string, string>);    
     sendResponse(res, {
         statusCode: 200,
         success: true,
