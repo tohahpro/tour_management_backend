@@ -7,6 +7,10 @@ import { PAYMENT_STATUS } from "./payment.interface";
 import { Payment } from "./payment.model";
 import { ISSLCommerz } from '../sslCommerz/sslCommerz.interface';
 import { sslService } from '../sslCommerz/sslCommerz.service';
+import { ITour } from '../tour/tour.interface';
+import { IUser } from '../user/user.interface';
+import { generatePDF } from '../../utils/invoice';
+import { sendEmail } from '../../utils/sendEmail';
 
 
 const initPayment = async (bookingId: string) => {
@@ -40,6 +44,7 @@ const initPayment = async (bookingId: string) => {
     }
 
 };
+
 const successPayment = async (query: Record<string, string>) => {
     // Update Booking Status to Confirm
     // Update Payment Status to PAID
@@ -49,18 +54,50 @@ const successPayment = async (query: Record<string, string>) => {
     try {
         const updatedPayment = await Payment.findOneAndUpdate({ transactionId: query.transactionId }, {
             status: PAYMENT_STATUS.PAID,
-
         }, { new: true, runValidators: true, session })
 
-        await Booking.findByIdAndUpdate(
+        if(!updatedPayment){
+            throw new AppError(401, "Payment not found.")
+        }
+
+        const updatedBooking = await Booking.findByIdAndUpdate(
             updatedPayment?.booking,
             { status: Booking_Status.COMPLETE },
             { new: true, runValidators: true, session }
         )
             .populate("user", "name email phone address")
-            .populate("tour", "title costFrom")
+            .populate("tour", "title")
             .populate("payment") // user, tour, payment is field name
 
+        if(!updatedBooking){
+            throw new AppError(401, "Booking not found.")
+        }
+
+            const invoiceData={
+            transactionId: updatedPayment.transactionId,
+            bookingDate: updatedBooking.createdAt as Date,
+            userName: (updatedBooking.user as unknown as IUser).name,
+            tourTitle: (updatedBooking.tour as unknown as ITour).title,
+            guestCount: updatedBooking.guestCount,
+            totalAmount: updatedPayment.amount,
+        }
+
+        const pdfBuffer = await generatePDF(invoiceData)
+
+
+        await sendEmail({
+            to: (updatedBooking.user as unknown as IUser).email,
+            subject: "Your Booking Invoice",
+            templateName: "invoice",
+            templateData: invoiceData,
+            attachments:[
+                {
+                    filename: `invoice.pdf`,
+                    content: pdfBuffer,
+                    contentType: "application/pdf"
+                }
+            ]
+        })
 
         await session.commitTransaction(); // transaction
         session.endSession()

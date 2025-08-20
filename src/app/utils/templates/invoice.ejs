@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Booking Invoice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .company-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-title {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .detail-item {
+            margin-bottom: 12px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+        }
+        
+        .tour-info {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        
+        .amount-details {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .total-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4f46e5;
+            text-align: right;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+        
+        .footer {
+            background: #f1f5f9;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .thank-you {
+            font-size: 18px;
+            color: #4f46e5;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .contact-info {
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <div class="company-name">Wander Tours</div>
+            <div class="invoice-title">Booking Confirmation & Invoice</div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <div class="section-title">Invoice Details</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Transaction ID</div>
+                        <div class="detail-value"><%= transactionId %></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Booking Date</div>
+                        <div class="detail-value"><%= bookingDate.toDateString() %></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Customer Name</div>
+                        <div class="detail-value"><%= userName %></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Tour Information</div>
+                <div class="tour-info">
+                    <div class="detail-item">
+                        <div class="detail-label">Tour Package</div>
+                        <div class="detail-value"><%= tourTitle %></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Number of Guests</div>
+                        <div class="detail-value"><%= guestCount %> person(s)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Payment Summary</div>
+                <div class="amount-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Subtotal</div>
+                        <div class="detail-value">$<%= (totalAmount * 0.9).toFixed(2) %></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Tax (10%)</div>
+                        <div class="detail-value">$<%= (totalAmount * 0.1).toFixed(2) %></div>
+                    </div>
+                    <div class="total-amount">Total: $<%= totalAmount.toFixed(2) %></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="thank-you">Thank you for your booking!</div>
+            <p>Your adventure awaits! Please present this invoice at the time of check-in.</p>
+            <div class="contact-info">
+                Questions? Contact us at tohahpro@gmail.com
+            </div>
+        </div>
+    </div>
+</body>
+</html>

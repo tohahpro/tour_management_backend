@@ -13,7 +13,7 @@ export interface InvoiceData{
 
 }
 
-export const generatePDF = async(invoiceData: InvoiceData)=>{
+export const generatePDF = async(invoiceData: InvoiceData): Promise<Buffer<ArrayBufferLike>>=>{
     try {
         return new Promise((resolve, reject)=>{
             const doc = new PDFDocument({size: "A4", margin: 50})
