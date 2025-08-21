@@ -71,21 +71,31 @@ const getSingleUser = async (id: string) => {
 
 const updateUser = async(userId: string, payload: Partial<IUser>, decodedToken: JwtPayload)=>{
 
+    if(decodedToken.role === Role.USER && decodedToken.sub !== userId){
+        if(userId !== decodedToken.userId){
+            throw new AppError(401, "You are not authorized")
+        }
+    }    
+
+
     const ifUserExist = await User.findById(userId)
 
     if(!ifUserExist){
         throw new AppError(httpStatus.NOT_FOUND, "User Not Found")
     }
 
+    if(decodedToken.role == Role.ADMIN && ifUserExist.role === Role.SUPER_ADMIN){
+        throw new AppError(401, "You are not authorized")
+    }
 
     if(payload.role){
         if(decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE){
             throw new AppError(httpStatus.FORBIDDEN, "You are not authorized")
         }
 
-        if(payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN){
-            throw new AppError(httpStatus.FORBIDDEN, "You are not authorized")
-        }   
+        // if(payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN){
+        //     throw new AppError(httpStatus.FORBIDDEN, "You are not authorized")
+        // }   
     }
 
     if(payload.isActive || payload.isDeleted || payload.isVerified){
